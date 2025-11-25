@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 
-from app.schemas.auth import UserWrite, UserRead
+from app.schemas.auth import UserCreate, UserPublic
 
 router = APIRouter()
 
 
-@router.post("/users", response_model=UserRead)
-async def create_user(user: UserWrite):
+@router.post("/users", response_model=UserPublic)
+async def create_user(user: UserCreate):
 
     # user creation logic here
 
-    return UserRead(username=user.username, email=user.email)
+    return UserPublic(id=123, username=user.username, email=user.email)
