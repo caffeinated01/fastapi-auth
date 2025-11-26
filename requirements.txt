@@ -1,5 +1,6 @@
 fastapi[standard]
 sqlmodel
+pydantic-settings
 pwdlib[argon2]
 python-jose[cryptography]
 python-multipart

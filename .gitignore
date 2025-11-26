@@ -1,3 +1,4 @@
 .venv/
 **/__pycache__/
-app/database.db
+*/database.db
+*/.env
