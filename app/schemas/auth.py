@@ -19,8 +19,7 @@ class UserCreate(BaseModel):
 
 
 class UserLogin(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
+    username: str
     password: str
 
 
