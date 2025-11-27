@@ -1,7 +1,11 @@
-from typing import Optional
 from datetime import datetime
-from sqlmodel import SQLModel, Field
+from typing import Optional, TYPE_CHECKING
+from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, DateTime, String, func
+
+
+if TYPE_CHECKING:
+    from app.models.token import RefreshToken
 
 
 class User(SQLModel, table=True):
@@ -20,3 +24,5 @@ class User(SQLModel, table=True):
             DateTime(timezone=True), server_default=func.now(), nullable=True
         )
     )
+
+    refresh_tokens: list["RefreshToken"] = Relationship(back_populates="user")
