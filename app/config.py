@@ -7,9 +7,11 @@ PROJECT_DIR = Path(__file__).parent.parent
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file="../.env")
 
-    SECRET_KEY: str
     ALGORITHM: str
+    ACCESS_TOKEN_SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_SECRET_KEY: str
+    REFRESH_TOKEN_EXPIRE_DAYS: int
 
     DATABASE_URL: str = f"sqlite:///{PROJECT_DIR}/database.db"
 

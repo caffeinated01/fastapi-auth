@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.crud import user as user_crud
+from app.crud import token as token_crud
 from app.db.database import SessionDep
 from app.schemas.auth import Token
 from app.utils.auth import verify_password, create_access_token
@@ -31,4 +32,10 @@ async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depe
         data={"sub": user.username}, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    refresh_token = token_crud.create_token(session, user)
+
+    return Token(
+        access_token=access_token,
+        token_type="bearer",
+        refresh_token=refresh_token.token,
+    )
