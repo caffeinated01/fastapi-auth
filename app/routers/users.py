@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing_extensions import Annotated
 
 from app.dependencies import get_current_active_user
@@ -24,3 +24,15 @@ async def create_user(user_create: UserCreate, db: SessionDep):
 @router.get("/me", response_model=UserPublic)
 async def fetch_current_user(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user
+
+
+@router.get("/{username}", response_model=UserPublic)
+async def fetch_user_by_username(username: str, db: SessionDep):
+    user = user_crud.get_user_by_username(db, username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    return UserPublic.model_validate(user, from_attributes=True)

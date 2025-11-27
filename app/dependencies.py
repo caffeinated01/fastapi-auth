@@ -33,7 +33,7 @@ def get_access_token(token: Annotated[str, Depends(oauth2_scheme)]) -> TokenPayl
     return token_payload
 
 
-def get_current_user(db: SessionDep, token: Annotated[TokenPayload, Depends(get_access_token)]):
+def get_current_user(token: Annotated[TokenPayload, Depends(get_access_token)], db: SessionDep):
     user = user_crud.get_user_by_username(db, username=token.sub)
 
     if not user:
