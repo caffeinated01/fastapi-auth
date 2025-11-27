@@ -18,5 +18,5 @@ async def root():
     return {"message": "Hello, World!"}
 
 
-app.include_router(auth.router)
-app.include_router(users.router)
+app.include_router(auth.router, prefix="/auth")
+app.include_router(users.router, prefix="/users")
