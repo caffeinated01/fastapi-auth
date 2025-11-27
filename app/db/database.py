@@ -2,10 +2,10 @@ from sqlmodel import SQLModel, create_engine, Session
 from fastapi import Depends
 from typing import Annotated
 
+from app.config import settings
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
 
+sqlite_url = settings.DATABASE_URL
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
