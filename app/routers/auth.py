@@ -32,7 +32,7 @@ async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depe
         data={"sub": user.username}, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
 
-    refresh_token = token_crud.create_token(session, user)
+    refresh_token = token_crud.store_refresh_token(session, user)
 
     return Token(
         access_token=access_token,

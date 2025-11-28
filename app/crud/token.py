@@ -8,13 +8,10 @@ from app.utils.auth import create_refresh_token
 from app.config import settings
 
 
-def create_token(session: Session, user: User):
-    refresh_token = create_refresh_token(
-        data={"sub": user.username}, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+def store_refresh_token(session: Session, user: User):
+    refresh_token, expires_at = create_refresh_token(
+        data={"sub": user.username}
     )
-
-    expires_at = datetime.now(timezone.utc) + \
-        timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
 
     if not user.id:
         raise ValueError("User ID cannot be None")
