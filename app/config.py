@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_SECRET_KEY: str
     REFRESH_TOKEN_EXPIRE_DAYS: int
 
+    CORS_ORIGINS: list[str]
+
     DATABASE_URL: str = f"sqlite:///{PROJECT_DIR}/database.db"
 
 
