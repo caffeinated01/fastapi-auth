@@ -1,7 +1,7 @@
 from typing_extensions import Annotated
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.crud import user as user_crud
@@ -17,7 +17,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):
+async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep, response: Response):
 
     user = user_crud.get_user_by_username(session, form.username)
 
@@ -34,8 +34,16 @@ async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depe
 
     refresh_token = token_crud.store_refresh_token(session, user)
 
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token.token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
+    )
+
     return Token(
         access_token=access_token,
         token_type="bearer",
-        refresh_token=refresh_token.token,
     )
