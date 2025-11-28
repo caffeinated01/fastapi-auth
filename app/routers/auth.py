@@ -79,3 +79,25 @@ async def refresh_accesss_token(response: Response, session: SessionDep, refresh
         access_token=new_access_token,
         token_type="bearer",
     )
+
+
+@router.post("/logout")
+async def logout(response: Response, session: SessionDep, refresh_token: Annotated[str | None, Cookie()] = None):
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token missing",
+        )
+
+    token_crud.revoke_refresh_token(session, refresh_token)
+
+    response.set_cookie(
+        key="refresh_token",
+        value="",
+        httponly=True,
+        # secure=True,
+        samesite="lax",
+        max_age=0
+    )
+
+    return {"message": "Logged out successfully"}

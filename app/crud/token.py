@@ -97,3 +97,18 @@ def rotate_refresh_token(session: Session, refresh_token: str) -> tuple[RefreshT
     session.commit()
 
     return new_refresh_token, user
+
+
+def revoke_refresh_token(session: Session, refresh_token: str) -> None:
+    token = session.exec(select(RefreshToken).where(
+        RefreshToken.token == refresh_token)).first()
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",  # no token found
+        )
+
+    token.revoked_at = datetime.now(timezone.utc)
+    session.add(token)
+    session.commit()
