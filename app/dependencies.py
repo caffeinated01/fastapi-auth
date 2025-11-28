@@ -17,7 +17,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 def get_access_token(token: Annotated[str, Depends(oauth2_scheme)]) -> TokenPayload:
     try:
         payload = jwt.decode(
-            token, settings.ACCESS_TOKEN_SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token,
+            settings.ACCESS_TOKEN_SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
         )
 
         token_payload = TokenPayload(**payload)
