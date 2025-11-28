@@ -38,7 +38,7 @@ async def login_for_access_token(form: Annotated[OAuth2PasswordRequestForm, Depe
         key="refresh_token",
         value=refresh_token.token,
         httponly=True,
-        # secure=True,
+        secure=True,
         samesite="lax",
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
     )
@@ -70,7 +70,7 @@ async def refresh_accesss_token(response: Response, session: SessionDep, refresh
         key="refresh_token",
         value=new_refresh_token.token,
         httponly=True,
-        # secure=True,
+        secure=True,
         samesite="lax",
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
     )
@@ -95,7 +95,7 @@ async def logout(response: Response, session: SessionDep, refresh_token: Annotat
         key="refresh_token",
         value="",
         httponly=True,
-        # secure=True,
+        secure=True,
         samesite="lax",
         max_age=0
     )
