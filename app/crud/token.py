@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 from pydantic import ValidationError
+from uuid import uuid4
 
 from app.models.token import RefreshToken
 from app.models.user import User
@@ -13,7 +14,10 @@ from app.config import settings
 
 def store_refresh_token(session: Session, user: User) -> RefreshToken:
     refresh_token, expires_at = create_refresh_token(
-        data={"sub": user.username}
+        data={
+            "sub": user.username,
+            "jti": str(uuid4())
+        }
     )
 
     if not user.id:
