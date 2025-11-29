@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    entrypoint: ["/app/entrypoint.sh"]
+    command: ["fastapi", "run", "app/main.py", "--port", "8000"]
+
+    volumes:
+      - ./data:/app/data
+
+    env_file:
+      - .env
+
+    environment:
+      - DATABASE_URL=sqlite:///./data/database.db
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped
