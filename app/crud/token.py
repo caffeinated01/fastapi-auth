@@ -62,6 +62,17 @@ def rotate_refresh_token(session: Session, refresh_token: str) -> tuple[RefreshT
         )
 
     if token.revoked_at:
+        # token reuse detected
+        tokens = session.exec(select(RefreshToken).where(
+            RefreshToken.user_id == token.user_id)).all()
+
+        for t in tokens:
+            if not t.revoked_at:
+                t.revoked_at = datetime.now(timezone.utc)
+                session.add(t)
+
+        session.commit()
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",  # token revoked
